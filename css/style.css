@@ -1,0 +1,61 @@
+body {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    background: #111;   
+    font-size: 10px; 
+}
+
+.title{
+    font-size: 6em;
+    color: honeydew;
+    font-weight: bold;
+    text-align: center;
+    margin: .2em;
+}
+
+.second-title{
+    font-size: 2em;
+    color: honeydew;
+    text-align: center;
+}
+
+.quipy-statment{
+    color: honeydew;
+    text-align: center;
+    padding: 1.2em;
+}
+
+.recipe-list{
+    grid-column: auto;
+}
+
+.recipe-card{
+    width: 400px;
+    border-radius: 10px;
+    border: solid orange;
+    color: honeydew;
+    background: #222;
+    margin: 10px 20px 10px 40px;
+    padding: 5px;
+    float: left;
+    font-size: 2em;
+}
+
+
+.recipe-card-col2{
+    width: 400px;
+    border-radius: 10px;
+    border: solid orange;
+    color: honeydew;
+    padding: 10px 20px 10px 40px;
+    margin: 20px;
+    float: right;
+    font-size: 2em;
+    }
+
+.recipe-card-title{
+    color: honeydew;
+    font-size: 2em;
+    font-weight: bold;
+}

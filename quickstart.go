@@ -18,6 +18,12 @@ import (
 // If having trouble see the following link:
 // https://developers.google.com/docs/api/quickstart/go
 
+// accepts structs and arrrays and marshalls data into readable json so you can pass it into jq for easier groking
+func prettyPrint(i interface{}) string {
+	s, _ := json.MarshalIndent(i, "", " ")
+	return string(s)
+}
+
 // Retrieves a token, saves the token, then returns the generated client.
 func getClient(config *oauth2.Config) *http.Client {
 	tokFile := "token.json"
@@ -89,6 +95,10 @@ func main() {
 		log.Fatalf("Unable to retrieve Docs client: %v", err)
 	}
 
+	if err != nil {
+		log.Fatalf("Unable to Retrieve Docs client: %v", err)
+	}
+
 	// Prints the title of the requested doc:
 	// https://docs.google.com/document/d/195j9eDD3ccgjQRttHhJPymLJUCOUjs-jmwTrekvdjFE/edit
 	// docId := "195j9eDD3ccgjQRttHhJPymLJUCOUjs-jmwTrekvdjFE"
@@ -98,5 +108,43 @@ func main() {
 	if err != nil {
 		log.Fatalf("Unable to retrieve data from document: %v", err)
 	}
-	fmt.Printf("The title of the doc is: %s\n", doc.Title)
+
+	fmt.Printf("The title of the doc is: %s\n\n", doc.Title)
+
+	var bookmarks []int
+
+	fmt.Println("Len of Content: ", len(doc.Body.Content))
+	for ic, c := range doc.Body.Content {
+		if c != nil {
+			if c.Paragraph != nil {
+				if c.Paragraph.Elements != nil {
+					for _, e := range c.Paragraph.Elements {
+						if e != nil {
+							if e.TextRun != nil {
+								if e.TextRun.TextStyle.Link != nil {
+									fmt.Println("BookmarkId: ", e.TextRun.TextStyle.Link.BookmarkId)
+									bookmarks = append(bookmarks, ic)
+								}
+								fmt.Printf("Content: %+s", e.TextRun.Content)
+								lastchar := e.TextRun.Content[len(e.TextRun.Content)-1]
+								if lastchar != 0x000A {
+									fmt.Println()
+								}
+								// fmt.Printf("Fontsize: %+v   ", e.TextRun.TextStyle.FontSize.Magnitude)
+
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	fmt.Println(bookmarks)
+
+	// for _, c := range content {
+	// 	for _, e := range c.Paragraph.Elements {
+	// 		fmt.Printf("Elements content: %+v", prettyPrint(e.TextRun.Content))
+	// 	}
+	// }
+	// fmt.Printf("%s\n", doc.Body.Content)
 }
